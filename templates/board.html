@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+
+{% block header %}
+    <h1>BOGGLE</h1>
+{% endblock %}
+
+{% block content %}
+<table>
+    {% for i in session['board'] %}
+    <tr>
+        {% for j in i %}
+        <td>
+            {{j}}
+        </td>
+        {% endfor %}
+    </tr>        
+    {% endfor %}
+</table>
+<br>
+<p><b>Guess:</b>
+    <form method="POST" id="form">
+        <input type="text" name="guess" id="guess">
+        <button>Submit</button>
+    </form>
+</p>
+<p id="msgsection"></p>
+<ul id="wordsection"></ul>
+
+{% endblock %}
