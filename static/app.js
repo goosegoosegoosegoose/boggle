@@ -6,7 +6,10 @@ class BoggleGame {
       this.board = $(`#${id}`);
       this.score = 0;
 
-      $("#form", this.board).on("submit", this.handleClick.bind(this));
+      this.handleClick = this.handleClick.bind(this);
+
+      // $("#form", this.board).on("submit", this.handleClick.bind(this));
+      // bind event handlers
   }
 
   showMessage(msg) {
@@ -20,23 +23,23 @@ class BoggleGame {
   async handleClick(evt){
       evt.preventDefault();
       
-      const $guess = $('#guess', this.board)
+      const $guess = $('#guess', this.board);
       
-      let guess = $guess.val()
+      let guess = $guess.val();
 
       if (this.words.has(guess)) {
-        this.showMessage("Word already guessed")
-        return
+        this.showMessage("Word already guessed");
+        return;
       }
 
-      const res = await axios.get("/check-word", {params: {word: guess}});
+      const res = await axios.get("/check-word", {params: {guess: guess}});
       if (res.data.result === "not-word") {
           this.showMessage(`${guess} is not in dictionary`);
         } else if (res.data.result === "not-on-board") {
           this.showMessage(`${guess} is not on this board`);
         } else {
           this.showWord(guess);
-          this.score += word.length;
+          this.score += guess.length;
           // this.showScore();
           this.words.add(guess);
           this.showMessage(`${guess} added`);
@@ -46,7 +49,7 @@ class BoggleGame {
 
 }
 
+let boggle = new BoggleGame("bog");
 
-new BoggleGame("boggle");
-
-// bind the form
+$("#form").on("submit", boggle.handleClick.bind(boggle));
+// what the heck

@@ -21,13 +21,13 @@ def show_board():
 def check_word():
     """Check if guess is on board using check_valid_word, pass in board and word, find if guess is a valid word"""
     
-    word = request.args['guess']
-    board = session['board']
+    word = request.args["guess"]
+    board = session["board"]
     res = boggle_game.check_valid_word(board, word)
 
     return jsonify({'result': res})
     #don't remember jsonify being taught
 
-
+# i want to submit form, get form answer, post answer to server via ajax, 
 
     
