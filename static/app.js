@@ -5,6 +5,7 @@ class BoggleGame {
       this.words = new Set();
       this.board = $(`#${id}`);
       this.score = 0;
+      this.count = 60
 
       this.handleClick = this.handleClick.bind(this);
 
@@ -13,11 +14,15 @@ class BoggleGame {
   }
 
   showMessage(msg) {
-    $("#msgsection").innerText = msg
+    $("#msgsection", this.board).text(msg);
   }
 
   showWord(word) {
-    $("#wordsection").append(`<li>${word}</li>`)
+    $("#wordsection", this.board).append(`<li>${word}</li>`);
+  }
+
+  showScore() {
+    $("#scoresection", this.board).text(`Score: ${this.score}`);
   }
 
   async handleClick(evt){
@@ -40,16 +45,46 @@ class BoggleGame {
         } else {
           this.showWord(guess);
           this.score += guess.length;
-          // this.showScore();
+          this.showScore();
           this.words.add(guess);
           this.showMessage(`${guess} added`);
     }
     $guess.val("");
   }
 
+  showCountdown(){
+    $("#countdown", this.board).text(`Timer: ${this.count}`);
+  }
+
+  async countdown() {
+
+    this.count -= 1;
+    this.showCountdown();
+    if (this.count <= 0){
+      clearInterval(counter);
+      $("#guess", this.board).prop('disabled', true);
+      $("#countdown", this.board).text("Time is up");
+      await this.saveScore();
+      return;
+    }
+  }
+
+  async saveScore(){
+
+    const res = await axios.post("/past-games", {score: this.score});
+    
+    if (this.score > res.data.score) {
+      $("#msgsection", this.board).text(`${this.score} is your new highscore! You have played ${res.data.reps} times`)
+    }
+    else {
+      $("#msgsection", this.board).text(`Your current highscore is ${res.data.score}. You have played ${res.data.reps} times`)
+    }
+  }
 }
 
 let boggle = new BoggleGame("bog");
 
 $("#form").on("submit", boggle.handleClick.bind(boggle));
-// what the heck
+// what the heck boggle.handleClick.bind(boggle)
+
+let counter = setInterval(boggle.countdown.bind(boggle), 1000);

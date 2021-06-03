@@ -5,25 +5,32 @@
 {% endblock %}
 
 {% block content %}
-<table>
-    {% for i in session['board'] %}
-    <tr>
-        {% for j in i %}
-        <td>
-            {{j}}
-        </td>
+<section id="bog">
+    <h2 id="scoresection">Score: 0</h2>
+    <br>
+    <h2 id="countdown">Timer: 60</h2>
+    <br>
+    <table>
+        {% for i in session['board'] %}
+        <tr>
+            {% for j in i %}
+            <td>
+                {{j}}
+            </td>
+            {% endfor %}
+        </tr>        
         {% endfor %}
-    </tr>        
-    {% endfor %}
-</table>
-<br>
-<p><b>Guess:</b>
-    <form id="form">
-        <input type="text" name="guess" id="guess">
-        <button>Submit</button>
-    </form>
-</p>
-<p id="msgsection"></p>
-<ul id="wordsection"></ul>
+    </table>
+    <br>
+    <p><b>Guess:</b>
+        <form id="form" method="POST">
+            <input type="text" name="guess" id="guess">
+            <button>Submit</button>
+        </form>
+    </p>
+    <p id="msgsection">Messages appear here</p>
+    <p>Words:</p>
+    <ul id="wordsection"></ul>
+</section>
 
 {% endblock %}

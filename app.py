@@ -14,8 +14,10 @@ def show_board():
 
     board = boggle_game.make_board()
     session['board'] = board
+    highscore = session.get('highscore', 0)
+    reps = session.get('reps', 0)
 
-    return render_template('board.html')
+    return render_template('board.html', reps = reps, highscore = highscore)
 
 @app.route('/check-word')
 def check_word():
@@ -30,4 +32,23 @@ def check_word():
 
 # i want to submit form, get form answer, post answer to server via ajax, 
 
+@app.route('/past-games', methods=["POST"])
+def past_games():
+    """Receive scores and keep track of times played"""
+
+    score = request.json['score']
+    reps = session.get('reps', 0)
+    highscore = session.get('highscore', 0)
+    session['reps'] = reps + 1
+
     
+    if score >= highscore:
+        session['highscore'] = score
+        return jsonify({'score': highscore, 'reps': reps})
+    elif highscore > score:
+        return jsonify({'score': highscore, 'reps': reps})
+
+
+# second parameter in session.get is a default value if value isn't set
+# axios posts and gets are more of a conversation? Once axios gets called in java, python runs, then the next line in java runs
+# even post requests have access to response.data
